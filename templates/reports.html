@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Trends</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #27263c;
+        }
+
+        .container_trends {
+            margin-bottom: 5px;
+            width: 1600px; 
+            max-width: 1300px; 
+            height: 670px;
+            margin: 25px auto;
+            padding: 20px;
+            background-color: #353333e1;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .container_preview {
+            width: 100%;
+            background-color: #504a4acb;
+            max-width: 100%;
+            overflow-y: auto;
+            height: 350px;
+            border-radius: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding: 15px;
+            position: relative; 
+        }
+
+        h2 {
+            text-align: left;
+            color: #eaeaea;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top :20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        input[type="datetime-local"], input[type="text"] {
+            width: 100%;
+            max-width: 350px;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            justify-content: center;
+        }
+
+        input[type="datetime-local"]:focus {
+            border-color: #007bff; 
+        }
+
+        .radio-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            
+        }
+
+        .radio-group label {
+            margin-bottom: 5px;
+            padding: 10px 20px;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            color: #007bff;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        input[type="radio"]:checked + label {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .button1 {
+            padding: 10px 20px;
+            border: none;
+            background-color: #868a87;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .actuve, .button1:hover {
+            background-color: #cedfd1;
+        }
+
+        .button1:focus{
+            color : rgb(19, 18, 18);
+            font-weight: bold; 
+        }
+
+        .clear-button {
+            position: absolute;
+            right: 15px;
+            bottom: 10px;
+            background-color: #138351;
+        }
+
+        .clear-button:hover {
+            background-color: #095522;
+        }
+
+        #preview {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            background-color: #272728;
+            display: none;
+        }
+
+        #result {
+            max-height: 100%; 
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            color: white;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        tbody {
+            background-color: #353333;
+        }
+
+        @media (max-width: 768px) {
+            .form-group {
+                flex-direction: column;
+            }
+
+            .radio-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            input[type="datetime-local"] {
+                width: 100%;
+            }
+
+        }
+
+        .tabs a.active {
+            background-color: inherit;
+            border-bottom: none;
+            border-top: 2px solid blue;
+        }
+  .tabs {
+    display: flex;
+    cursor: pointer;
+    background-color: #f1f1f1;
+    margin-top: 5px;
+  }
+  
+  .tab-content {
+    padding: 20px;
+    border: 1px solid #090909;
+    color: white;
+    display: none; 
+  }
+  
+  .tab-content.active {
+    display: block; 
+  }
+  
+
+        
+    </style>
+</head>
+<body>
+    <h1>Reports View</h1>
+    <div class="container_trends">
+        <div class="tabs">
+            <button class="tablinks button1" onclick="Navigate(event, 'Cam1')" id="defaultOpen">Cam1</button>
+            <button class="tablinks button1" onclick="Navigate(event, 'Cam2')">Cam2</button>
+        </div>
+
+        <div id="Cam1" class="tabcontent" >
+            <form id="dateForm_cam1" value="Cam1">
+                <div class="form-group">
+                    <label for="start_date_cam1">Start Date</label>
+                    <input type="datetime-local" id="start_date_cam1" required>
+                    <label for="end_date_cam1">End Date</label>
+                    <input type="datetime-local" id="end_date_cam1" required>
+                </div>
+        
+                <div class="radio-group">
+                    <input type="radio" name="data_type" value="hour" id="hour">
+                    <label for="hour">Hourly</label>
+                    <input type="radio" name="data_type" value="day" id="day">
+                    <label for="day">Daily</label>
+                    <input type="radio" name="data_type" value="week" id="week">
+                    <label for="week">Weekly</label>
+                    <input type="radio" name="data_type" value="month" id="month">
+                    <label for="month">Monthly</label>
+                </div>
+                <button type="button" style="margin-top: -50px"  onclick="generateReport()">Generate</button>
+            </form>
+            <button type="button" style= " margin-bottom :-3px" class="clear-button" onclick="downloadReport()" >Download</button>
+            <div class="container_preview">
+                <div id="result_cam1"></div>
+            </div>
+        </div>
+        
+        <div id="Cam2" class="tabcontent">
+            <form id="dateForm_cam2" value="Cam2">
+                <div class="form-group">
+                    <label for="start_date_cam2">Start Date</label>
+                    <input type="datetime-local" id="start_date_cam2" required>
+                    <label for="end_date_cam2">End Date</label>
+                    <input type="datetime-local" id="end_date_cam2" required>
+                </div>
+        
+                <div class="radio-group">
+                    <input type="radio" name="data_type" value="hour_reset" id="hour_reset">
+                    <label for="hour_reset">Hourly (Reset)</label>
+                    <input type="radio" name="data_type" value="day_reset" id="day_reset">
+                    <label for="day_reset">Daily (Reset)</label>
+                    <input type="radio" name="data_type" value="week_reset" id="week_reset">
+                    <label for="week_reset">Week (Reset)</label>
+                    <input type="radio" name="data_type" value="month_reset" id="month_reset">
+                    <label for="month_reset">Month (Reset)</label>
+                </div>
+                <button style="margin-top: -50px"  type="button" onclick="generateReport()">Generate</button>
+            </form>
+            <button type="button" style= " margin-bottom :-3px"class="clear-button" onclick="downloadReport()">Download</button>
+            <div class="container_preview">
+                <div id="result_cam2"></div>
+            </div>
+        </div>
+        
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    
+    
+    <script>
+
+
+function Navigate(evt, cityName) {
+    let tabcontent = document.getElementsByClassName("tabcontent");
+    for (let i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+
+    let tablinks = document.getElementsByClassName("tablinks");
+    for (let i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+
+    document.getElementById(cityName).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+
+document.getElementById("defaultOpen").click();
+
+
+function generateReport() {
+    const formType = $('.tabcontent:visible').attr('id');
+    const startDate = $(`#${formType} #start_date_${formType.toLowerCase()}`).val();
+    const endDate = $(`#${formType} #end_date_${formType.toLowerCase()}`).val();
+    const dataType = $(`#${formType} input[name="data_type"]:checked`).val();
+    const resultContainer = formType === "Cam1" ? "#result_cam1" : "#result_cam2";
+
+    if (startDate && endDate && dataType) {
+        $.post('/get_trends', {
+            start_date: startDate,
+            end_date: endDate,
+            data_type: dataType,
+            dateForm: formType
+        }, function (data) {
+            let tableHtml = `<table>
+                                <thead>
+                                    <tr>
+                                        <th>${dataType.charAt(0).toUpperCase() + dataType.slice(1)}${dataType === 'month' ? ' (YYYY-MM)' : ''}</th>
+                                        
+                                       
+                                    </tr>
+                                </thead>
+                                <tbody>`;
+
+            if (data.date_list.length > 0) {
+                for (let i = 0; i < data.date_list.length; i++) {
+                    tableHtml += `<tr>
+                                    
+                                    <td> ${data.date_list[i]}</td>
+                                    <td>${data.count_list[i]}</td>
+                                </tr>`;
+                }
+            } else {
+                tableHtml += `<tr><td colspan="2">No data found for the selected range.</td></tr>`;
+            }
+
+            tableHtml += `</tbody></table>`;
+            $(resultContainer).html(tableHtml); 
+            console.log(data)
+        });
+    } else {
+        alert("Please select both start and end dates and a data type.");
+    }
+
+}
+
+
+function downloadReport() {
+    const formType = $('.tabcontent:visible').attr('id');
+    const startDate = $(`#${formType} #start_date_${formType.toLowerCase()}`).val();
+    const endDate = $(`#${formType} #end_date_${formType.toLowerCase()}`).val();
+    const dataType = $(`#${formType} input[name="data_type"]:checked`).val();
+
+    if (startDate && endDate && dataType) {
+        $.ajax({
+            url: '/reports',
+            method: 'POST',
+            data: {
+                start_date: startDate,
+                end_date: endDate,
+                reportType: dataType,
+                dateForm: formType
+            },
+            xhrFields: {
+                responseType: 'blob' 
+            },
+
+            success: function (data, status, xhr) {
+            console.log("AJAX success:", status); 
+            // const filename = xhr.getResponseHeader('Content-Disposition').split('filename=')[1];
+            const blob = data;
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            // link.download = filename; 
+            link.click();
+
+            // Log to check if the alert code is running
+            console.log("Alert will show now");
+            alert("Report downloaded successfully!");
+},
+
+            error: function () {
+                alert("Failed to download the report.");
+            }
+        });
+    } else {
+        alert("Please select both start and end dates and a data type.");
+    }
+}
+
+
+
+
+
+    </script>
+</body>
+</html>

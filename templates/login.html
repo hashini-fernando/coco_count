@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>COCO COUNTER v1.0</title>
+    <style>
+        body {
+            background-color: #27263c;
+            font-family: Arial, sans-serif;
+            color: rgba(255, 255, 210, 1);
+            text-align: center;
+        }
+        .container1 {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: rgba(20, 47, 78, 0.9);
+            border-radius: 10px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px;
+            margin: 10px 5px;
+            width: 100px;
+            border-radius: 5px;
+            border: none;
+            background-color: rgba(85, 98, 112, 1);
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: rgba(105, 118, 132, 1);
+        }
+        
+        #error-message {
+            color: red;
+            display: none;
+        }
+        footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: rgba(178, 190, 181, 1);
+        }
+    </style>
+</head>
+<body>
+
+    <body>
+
+
+        <div  class="main-top">
+          <div class="logo">
+            <img src="{{ url_for('static', filename='coconutw.png') }}" alt="Coconut" />
+              <p>COCO COUNTER V1.0</p>
+            </div>
+            <hr>
+        </div>
+      
+      <div class="container1">
+          <h1>Login</h1>
+      
+          <div>
+              <input type="text" id="username" placeholder="Username">
+              <input type="password" id="password" placeholder="Password">
+          </div>
+      
+          <button id="login-btn">Login</button>
+          <button id="logout-btn">Logout</button>
+      
+          <div id="error-message">Invalid username or password</div>
+      
+          
+      </div>
+      
+      <footer>
+        <div class="footer">
+          <p>AV IOT Solutions</p>
+        </div>
+      </footer>
+<script>
+    function login() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        if (username === "admin" && password === "1234") {
+            alert("Login successfully!");
+
+           
+            document.getElementById('error-message').style.display = 'none';
+            window.location.href = "/index";
+        } else {
+            document.getElementById('error-message').style.display = 'block';
+        }
+    }
+
+    function logout() {
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+        alert("Logged out!");
+    }
+
+    document.getElementById('login-btn').addEventListener('click', login);
+    document.getElementById('logout-btn').addEventListener('click', logout);
+
+    function openWebsite() {
+        window.open("https://iotsolutions.lk/", "_blank");
+    }
+
+    function openFacebook() {
+        window.open("https://www.facebook.com/share/1qe7aWBGsAKUnDQc/?mibextid=WC7FNe", "_blank");
+    }
+
+    function openWhatsApp() {
+        const contactNumber = "+94777371118";
+        window.open(`https://wa.me/${contactNumber}`, "_blank");
+    }
+
+    function openEmail() {
+        window.location.href = "mailto:info@iotsolutions.lk";
+    }
+</script>
+
+</body>
+</html>

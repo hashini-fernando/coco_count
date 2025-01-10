@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coco Counter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='all.min.css') }}"" />
+    <script src="{{ url_for('static', filename='jquery-3.7.1.min.js') }}"></script>
+    
+    <script>
+        $(document).ready(function () {
+            function loadContent(url) {
+                $('#main_body').load(url, function() {
+                 
+                });
+            }
+
+            function updateActiveNav(link) {
+            
+            $('.navbar ul li a').removeClass('active');
+
+            $(link).addClass('active');
+        }
+
+            $('#link1').click(function (event) {
+                event.preventDefault(); 
+                loadContent('/home');
+                updateActiveNav(this);
+            });
+
+            $('#link2').click(function (event) {
+                event.preventDefault(); 
+                loadContent('/trends');
+                updateActiveNav(this);
+            });
+
+            $('#link3').click(function (event) {
+                event.preventDefault();
+                loadContent('/reports');
+                updateActiveNav(this);
+            });
+
+
+
+        });
+
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch("/home")
+            .then(response => {
+                console.log(response)
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.text(); 
+            })
+            .then(html => {
+                document.getElementById("camera-view-container").innerHTML = html; 
+            })
+            .catch(error => {
+                console.error("Error fetching the HTML file:", error);
+            });
+
+        });
+
+    </script>
+        <style>
+            body {
+                background-color: #27263c;
+                font-family: Arial, sans-serif;
+                color: rgba(255, 255, 210, 1);
+                text-align: center;
+            }
+
+            .container_trends {
+            width: 1600px;
+            max-width: 1300px;
+            height: 670px;
+            margin: 25px auto;
+            padding: 20px;
+            background-color: #353333e1;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+            h1 {
+                margin-bottom: 20px;
+            }
+            input[type="text"], input[type="password"] {
+                width: 100%;
+                padding: 10px;
+                margin: 10px 0;
+                border: none;
+                border-radius: 5px;
+            }
+            button {
+                padding: 10px;
+                margin: 10px 5px;
+                width: 100px;
+                border-radius: 5px;
+                border: none;
+                background-color: rgba(85, 98, 112, 1);
+                color: white;
+                cursor: pointer;
+            }
+            button:hover {
+                background-color: rgba(105, 118, 132, 1);
+            }
+            .social-buttons {
+                margin-top: 20px;
+            }
+            .social-buttons button {
+                background: none;
+                border: none;
+                color: rgba(85, 98, 112, 1);
+                font-size: 20px;
+                cursor: pointer;
+            }
+            .social-buttons button:hover {
+                color: rgba(155, 168, 182, 1);
+            }
+            #error-message {
+                color: red;
+                display: none;
+            }
+            footer {
+                margin-top: 30px;
+                font-size: 12px;
+                color: rgba(178, 190, 181, 1);
+            }
+        </style>
+</head>
+<body>
+
+    <div class="main-top">
+        <div class="logo_coco">
+            <img src="{{ url_for('static', filename='coconutw.png') }}" alt="Coconut" />
+            <p>COCO COUNTER V1.0</p>
+        </div>
+        <hr>
+    </div>
+
+    <div class="container1">
+        <nav>
+            <div class="navbar">
+                <ul>
+                    <li><a href="#" id="link1">
+                        <div  class="logo ">
+                        <img src="{{ url_for('static', filename='home.png') }}" alt="home" />
+                        <span class="nav-item">Home</span>
+                        </div>
+                    </a></li>
+                    <li><a href="#" id="link2">
+
+                    <div  class="logo">
+                        <img src="{{ url_for('static', filename='web-portal.png') }}" alt="trends" />
+                        <span class="nav-item">Trends</span>
+                    </div>
+                    </a></li>
+                    <li><a href="#" id="link3">
+                        <div  class="logo">
+                        <img src="{{ url_for('static', filename='file.png') }}" alt="reports" />
+                        <span class="nav-item">Reports</span>
+                    </div>
+                    </a></li>
+
+                    <li><a href="#" class=" About">
+                        <div  class="logo">
+                        <img src="{{ url_for('static', filename='info.png') }}" alt="info" />
+                        <span class="nav-item">About</span>
+                    </div>
+                    </a></li>
+                    <li><a href="#" class=" Help">
+                        <div  class="logo">
+                        <img src="{{ url_for('static', filename='question.png') }}" alt="help" />
+                        <span class="nav-item">Help</span>
+                        </div>
+                    </a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <section class="main">
+            <div class="main-body" id="main_body">
+                
+                <div id="camera-view-container"></div>
+                     
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="footer">
+        <p>AV IOT Solutions</p>
+    </div>
+</body>
+</html>

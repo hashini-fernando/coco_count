@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trends View</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='chart.js') }}"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #27263c;
+        }
+
+        .container_trends {
+            width: 1600px;
+            max-width: 1300px;
+            height: 670px;
+            margin: 25px auto;
+            margin-bottom: -2px;
+            padding: 20px;
+            background-color: #353333e1;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .container_preview {
+            width: 100%;
+            background-color: #504a4acb;
+            box-shadow: 0 0 10px rgba(131, 124, 124, 0.1);
+            height: 458px;
+            border-radius: 8px;
+            margin-top: 10px;
+            padding: 15px;
+            position: relative; 
+        }
+
+        .card-body {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        h2 {
+            text-align: left;
+            color: #eaeaea;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: white;
+            margin-bottom: 5px;
+            bottom:9px;
+        }
+
+        input[type="datetime-local"], input[type="text"] {
+            width: 100%;
+            max-width: 350px;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            justify-content: center;
+        }
+
+        input[type="datetime-local"]:focus {
+            border-color: #007bff; 
+        }
+
+        .radio-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .radio-group label {
+            padding: 10px 20px;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            color: #007bff;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        input[type="radio"]:checked + label {
+            background-color: #007bff;
+            color: white;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        #result {
+            max-height: 420px; 
+            overflow-y: auto;
+        }
+
+        @media (max-width: 768px) {
+            .form-group {
+                flex-direction: column;
+            }
+
+            .radio-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            input[type="datetime-local"] {
+                width: 100%;
+            }
+        }
+
+        #reportChart {
+            width: 100% !important; 
+            height: 420px !important; 
+        }
+    </style>
+</head>
+<body>
+    <h1>Trends View</h1>
+    <div class="container_trends">
+        <form id="dateForm_cam1">
+            <div class="form-group">
+                <label for="start_date">Start Date</label>
+                <input type="datetime-local" id="start_date" required>
+                <label for="end_date">End Date</label>
+                <input type="datetime-local" id="end_date" required>
+            </div>
+            <div class="radio-group">
+                <input type="radio" name="data_type" value="hour" id="hour">
+                <label for="hour">Hourly</label>
+                <input type="radio" name="data_type" value="day" id="day">
+                <label for="day">Daily</label>
+                <input type="radio" name="data_type" value="week" id="week">
+                <label for="week">Weekly</label>
+                <input type="radio" name="data_type" value="month" id="month">
+                <label for="month">Monthly</label>
+            </div>
+        </form>
+        <div class="container_preview">
+            <canvas id="reportChart"></canvas>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        var myChart = null;
+
+        function updateChart(dateList, countList) {
+            const ctx = document.getElementById('reportChart').getContext('2d');
+            if (myChart) {
+                myChart.destroy();
+            }
+
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dateList,
+                    datasets: [{
+                        label: 'Count',
+                        data: countList,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderWidth: 2,
+                        fill: false,
+                        pointBackgroundColor: 'blue',
+                        pointBorderColor: 'white',
+                        pointRadius: 3,
+                        pointHoverRadius: 7,
+                        pointHoverBackgroundColor: 'yellow',
+                        pointHoverBorderColor: 'red'
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,255,0.5)'
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(0,0,255,0.5)'
+                            },
+                            ticks: {
+                                color: 'white'
+                            }
+                        }
+                    },
+                   
+                    },
+                    interaction: {
+                        mode: 'nearest',
+                        intersect: false
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false
+                    
+                }
+            });
+        }
+
+        function fetchTrends() {
+            const startDate = $('#start_date').val();
+            const endDate = $('#end_date').val();
+            const dataType = $('input[name="data_type"]:checked').val();
+
+            if (startDate && endDate && dataType) {
+                $.post('/get_trends', { start_date: startDate, end_date: endDate, data_type: dataType, dateForm: 'Cam1' }, function(data) {
+                    updateChart(data.date_list, data.count_list);
+                });
+            }
+        }
+
+        $('#start_date, #end_date').on('change', fetchTrends);
+        $('input[name="data_type"]').on('change', fetchTrends);
+    </script>
+</body>
+</html>
